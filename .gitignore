@@ -39,3 +39,22 @@
 
 # debug information files
 *.dwo
+
+
+# Objetos
+*.o
+*.obj
+
+# Arquivos de build
+*.a
+*.so
+*.dll
+*.lib
+
+# Executáveis Linux
+*.out
+*.elf
+
+# Executáveis Windows
+*.exe
+
