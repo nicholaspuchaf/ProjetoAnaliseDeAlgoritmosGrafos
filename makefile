@@ -5,6 +5,8 @@ CXXFLAGS = -std=c++17 -O2
 # Executável
 TARGET = a.out
 
+SHELL := /bin/bash
+
 # Arquivos de teste (1..10)
 TESTS = $(shell seq -w 1 10)
 
@@ -14,43 +16,46 @@ $(TARGET): dialDijkistra.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 dijkistraC : dijkstra.cpp
-	$(CXX) $(CXXFLAGS) $< -o dijkstra
+	$(CXX) $(CXXFLAGS) $< -o dijkstra.o
 
 dialDijkistraC : dialDijkistra.cpp
-	$(CXX) $(CXXFLAGS) $< -o dialDijkistra
+	$(CXX) $(CXXFLAGS) $< -o dialDijkistra.o
 
 biDijkstraC : biDijkstra.cpp
-	$(CXX) $(CXXFLAGS) $< -o biDijkstra
+	$(CXX) $(CXXFLAGS) $< -o biDijkstra.o
 
 biDialDijkstraC : biDialDijkstra.cpp
-	$(CXX) $(CXXFLAGS) $< -o biDialDijkstra
+	$(CXX) $(CXXFLAGS) $< -o biDialDijkstra.o
 
 
-# Regra para rodar TODOS os testes
 dijkistra: dijkistraC
 	@for i in $(TESTS); do \
-		echo "== Teste $$i =="; \
-		./dijkstra < input/arq$$i.in > temp$$i.out; \
-		if diff -q temp$$i.out output/arq$$i.out > /dev/null; then \
-			echo "OK"; \
-			rm temp$$i.out; \
-		else \
-			echo "ERRO no teste $$i!"; \
-		fi; \
-	done
+        echo "== Teste $$i =="; \
+        ./dijkstra.o < input/arq$$i.in > temp$$i.out; \
+        head -n 1 temp$$i.out | tr -d '\n' > temp$$i.line; \
+        if diff -q temp$$i.line final/arq$$i.out > /dev/null; then \
+            echo "OK"; \
+        else \
+            echo "ERRO no teste $$i!"; \
+        fi; \
+        rm -f temp$$i.out temp$$i.line; \
+    done
 	@echo "----------------------"
 	@echo "TODOS OS TESTES PASSARAM!"
+
 
 dialDijkistra: dialDijkistraC
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./dialDijkistra < input/arq$$i.in > temp$$i.out; \
-		if diff -q temp$$i.out outputF/arq$$i.out > /dev/null; then \
+		./dialDijkstra.o < input/arq$$i.in > temp$$i.out; \
+		head -n 1 temp$$i.out | tr -d '\n' > temp$$i.line; \
+		if diff -q temp$$i.line finalF/arq$$i.out > /dev/null; then \
 			echo "OK"; \
 			rm temp$$i.out; \
 		else \
 			echo "ERRO no teste $$i!"; \
 		fi; \
+		rm -f temp$$i.out temp$$i.line; \
 	done
 	@echo "----------------------"
 	@echo "TODOS OS TESTES PASSARAM!"
@@ -58,13 +63,15 @@ dialDijkistra: dialDijkistraC
 biDijkstra: biDijkstraC
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./biDijkstra < input/arq$$i.in > temp$$i.out; \
-		if diff -q temp$$i.out output/arq$$i.out > /dev/null; then \
+		./biDijkstra.o < input/arq$$i.in > temp$$i.out; \
+		head -n 1 temp$$i.out | tr -d '\n' > temp$$i.line; \
+		if diff -q temp$$i.line final/arq$$i.out > /dev/null; then \
 			echo "OK"; \
 			rm temp$$i.out; \
 		else \
 			echo "ERRO no teste $$i!"; \
 		fi; \
+		rm -f temp$$i.out temp$$i.line; \
 	done
 	@echo "----------------------"
 	@echo "TODOS OS TESTES PASSARAM!"
@@ -72,13 +79,15 @@ biDijkstra: biDijkstraC
 biDialDijkistra: biDialDijkstraC
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./biDialDijkstra < input/arq$$i.in > temp$$i.out; \
-		if diff -q temp$$i.out outputF/arq$$i.out > /dev/null; then \
+		./biDialDijkstra.o < input/arq$$i.in > temp$$i.out; \
+		head -n 1 temp$$i.out | tr -d '\n' > temp$$i.line; \
+		if diff -q temp$$i.line finalF/arq$$i.out > /dev/null; then \
 			echo "OK"; \
 			rm temp$$i.out; \
 		else \
 			echo "ERRO no teste $$i!"; \
 		fi; \
+		rm -f temp$$i.out temp$$i.line; \
 	done
 	@echo "----------------------"
 	@echo "TODOS OS TESTES PASSARAM!"
@@ -88,7 +97,7 @@ timerDijkstra: dijkistraC
 	@echo "---Dijkistra---------"
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./dijkstra < input/arq$$i.in; \
+		./dijkstra.o < input/arq$$i.in; \
 		echo ""; \
 	done
 	@echo "----------------------"
@@ -98,7 +107,7 @@ timerDialDijkstra: dialDijkistraC
 	@echo "---Dial Dijkistra---------"
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./dialDijkistra < input/arq$$i.in; \
+		./dialDijkstra.o < input/arq$$i.in; \
 		echo ""; \
 	done
 	@echo "----------------------"
@@ -108,7 +117,7 @@ timerBiDijkstra: biDijkstraC
 	@echo "---Bi Dijkstra---------"
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./biDijkstra < input/arq$$i.in; \
+		./biDijkstra.o < input/arq$$i.in; \
 		echo ""; \
 	done
 	@echo "----------------------"
@@ -118,9 +127,12 @@ timerBiDialDijkstra: biDialDijkstraC
 	@echo "---Bi Dial Dijkistra---------"
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
-		./biDialDijkstra < input/arq$$i.in; \
+		./biDialDijkstra.o < input/arq$$i.in; \
 		echo ""; \
 	done
 	@echo "----------------------"
 	@echo "TODOS OS TESTES FORAM RODADOS!"
 
+
+clean:
+	rm -f *.o $(TARGET) temp*.out
