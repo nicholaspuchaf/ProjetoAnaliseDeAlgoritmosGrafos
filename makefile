@@ -15,11 +15,11 @@ all: $(TARGET)
 $(TARGET): dialDijkistra.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
 
-dijkistraC : dijkstra.cpp
+dijkstraC : dijkstra.cpp
 	$(CXX) $(CXXFLAGS) $< -o dijkstra.o
 
-dialDijkistraC : dialDijkistra.cpp
-	$(CXX) $(CXXFLAGS) $< -o dialDijkistra.o
+dialDijkstraC : dialDijkstra.cpp
+	$(CXX) $(CXXFLAGS) $< -o dialDijkstra.o
 
 biDijkstraC : biDijkstra.cpp
 	$(CXX) $(CXXFLAGS) $< -o biDijkstra.o
@@ -28,7 +28,7 @@ biDialDijkstraC : biDialDijkstra.cpp
 	$(CXX) $(CXXFLAGS) $< -o biDialDijkstra.o
 
 
-dijkistra: dijkistraC
+dijkstra: dijkstraC
 	@for i in $(TESTS); do \
         echo "== Teste $$i =="; \
         ./dijkstra.o < input/arq$$i.in > temp$$i.out; \
@@ -44,7 +44,7 @@ dijkistra: dijkistraC
 	@echo "TODOS OS TESTES PASSARAM!"
 
 
-dialDijkistra: dialDijkistraC
+dialDijkstra: dialDijkstraC
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
 		./dialDijkstra.o < input/arq$$i.in > temp$$i.out; \
@@ -76,7 +76,7 @@ biDijkstra: biDijkstraC
 	@echo "----------------------"
 	@echo "TODOS OS TESTES PASSARAM!"
 
-biDialDijkistra: biDialDijkstraC
+biDialDijkstra: biDialDijkstraC
 	@for i in $(TESTS); do \
 		echo "== Teste $$i =="; \
 		./biDialDijkstra.o < input/arq$$i.in > temp$$i.out; \
@@ -136,3 +136,7 @@ timerBiDialDijkstra: biDialDijkstraC
 
 clean:
 	rm -f *.o $(TARGET) temp*.out
+
+allTests: dijkstra dialDijkstra biDijkstra biDialDijkstra
+
+allTimers: timerDijkstra timerDialDijkstra timerBiDijkstra timerBiDialDijkstra
