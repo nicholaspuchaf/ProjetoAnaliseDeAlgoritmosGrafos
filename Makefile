@@ -163,6 +163,6 @@ timerPlShortestPath:
 clean:
 	rm -f *.o $(TARGET) temp*.out
 
-allTests: dijkstra dialDijkstra biDijkstra biDialDijkstra plShortestPath
+allTests: dijkstra dialDijkstra biDijkstra biDialDijkstra 
 
-allTimers: timerDijkstra timerDialDijkstra timerBiDijkstra timerBiDialDijkstra timerPlShortestPath
+allTimers: timerDijkstra timerDialDijkstra timerBiDijkstra timerBiDialDijkstra

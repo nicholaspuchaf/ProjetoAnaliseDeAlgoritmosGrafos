@@ -30,46 +30,34 @@ def solve_shortest_path_gurobi_stdin():
         
         edges[(u, v)] = w
         edges[(v, u)] = w 
-
+        
     model = gp.Model("CaminhoMinimo_PL")
-    
     x = model.addVars(edges.keys(), vtype=GRB.BINARY, name="x")
     start_time = time.perf_counter()
-
     obj_expr = gp.quicksum(edges[u, v] * x[u, v] for u, v in edges.keys())
     model.setObjective(obj_expr, GRB.MINIMIZE)
     model.setParam('OutputFlag', 0)
-    
     adj_out = {i: [] for i in vertices}
     adj_in = {i: [] for i in vertices}
-
     for u, v in edges.keys():
         adj_out[u].append((u, v))
         adj_in[v].append((u, v))
-
     for i in vertices:
-        
         outgoing_edges = adj_out[i]
         incoming_edges = adj_in[i]
-        
         flow_out = gp.quicksum(x[u, v] for u, v in outgoing_edges)
-        
         flow_in = gp.quicksum(x[u, v] for u, v in incoming_edges)
-
         if i == S:
             balance = 1
         elif i == D:
             balance = -1
         else:
             balance = 0
-
         model.addConstr(flow_out - flow_in == balance, name=f"ConservacaoFluxo_{i}")
-
     model.optimize()
 
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
-
     if model.status == GRB.OPTIMAL:
         min_distance = model.objVal
         print(f"{format3(min_distance)}")
