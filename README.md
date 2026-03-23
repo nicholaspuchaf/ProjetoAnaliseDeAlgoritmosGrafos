@@ -1,3 +1,10 @@
+## Esse é um repositório sobre a disciplina Projeto e Análise de Algortimos 2 - MC558/2025 - Unicamp 
+
+Nesta disciplinas vimos algoritmos e conceitos de Grafos.
+Esse repositorio contém algoritmos de Dijkistra em várias variações para obter uma performance otimizada.
+
+Se você está fazendo essa matéria não copie esse repositório, essa matéria será muito importante para sua carreira.
+
 # mc558_2s2025_ra253769
 MC558 Laboratório
 
